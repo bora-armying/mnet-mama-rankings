@@ -176,9 +176,10 @@ def get_recent_changes(db_path: str, limit: int = 50) -> List[Dict]:
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
     cur.execute("""
-        SELECT category, artist_name, old_rank, new_rank, rank_change, detected_at
+        SELECT category, artist_name, old_rank, new_rank, rank_change, detected_at,
+               artist_id, snapshot_id
         FROM ranking_changes
-        ORDER BY detected_at DESC
+        ORDER BY snapshot_id DESC, id DESC
         LIMIT ?
     """, (limit,))
 
@@ -190,7 +191,9 @@ def get_recent_changes(db_path: str, limit: int = 50) -> List[Dict]:
             'old_rank': row[2],
             'new_rank': row[3],
             'change': row[4],
-            'detected_at': row[5]
+            'detected_at': row[5],
+            'artist_id': row[6],
+            'snapshot_id': row[7]
         })
 
     conn.close()

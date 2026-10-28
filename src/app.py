@@ -7,6 +7,39 @@ from .storage import init_db, save_rankings, get_latest_rankings, get_recent_cha
 APP = Flask(__name__, template_folder=os.path.join(os.path.dirname(__file__), '..', 'templates'))
 DB_PATH = os.path.join(os.path.dirname(__file__), '..', 'data', 'rankings.db')
 
+# Categories shown on the page, in display order
+DISPLAY_CATEGORIES = ["FANS' CHOICE MALE", "FANS' CHOICE OF THE YEAR with VISA"]
+
+
+def page_context(rankings, changes):
+    """Build template context limited to DISPLAY_CATEGORIES.
+
+    Each group gets its options sorted by rank, each annotated with
+    'movement' (positive = moved up) from the group's most recent update
+    in which any rank changed.
+    """
+    by_name = {g['groupName']: g for g in (rankings or {}).get('groups', [])}
+    groups = []
+    for name in DISPLAY_CATEGORIES:
+        group = by_name.get(name)
+        if not group:
+            continue
+        # changes are newest first; keep only the latest snapshot with movement
+        group_changes = [c for c in changes if c['category'] == name]
+        latest = [c for c in group_changes if c['snapshot_id'] == group_changes[0]['snapshot_id']] if group_changes else []
+        movement = {c['artist_id']: c['change'] for c in latest}
+        options = [
+            dict(o, movement=movement.get(o['artistId'], 0))
+            for o in sorted(group['options'], key=lambda o: o['rank'])
+        ]
+        groups.append({
+            'id': group['groupId'],
+            'name': name,
+            'options': options,
+            'moved_at': latest[0]['detected_at'] if latest else None,
+        })
+    return {'rankings': rankings, 'groups': groups}
+
 
 @APP.before_request
 def setup():
@@ -28,9 +61,9 @@ def index():
             save_rankings(DB_PATH, rankings)
 
     # Get recent changes
-    changes = get_recent_changes(DB_PATH, limit=20)
+    changes = get_recent_changes(DB_PATH, limit=500)
 
-    return render_template('index.html', rankings=rankings, changes=changes)
+    return render_template('index.html', **page_context(rankings, changes))
 
 
 @APP.route('/api/rankings')

@@ -7,7 +7,7 @@ import os
 import sys
 import json
 import argparse
-from .app import APP, DB_PATH
+from .app import APP, DB_PATH, page_context
 from .fetcher import extract_rankings_summary
 from .storage import init_db, get_latest_rankings, get_recent_changes
 
@@ -20,12 +20,12 @@ def build(out_dir: str) -> bool:
         print("ERROR: No rankings in database; run `python3 -m src.scheduler --once` first")
         return False
 
-    changes = get_recent_changes(DB_PATH, limit=20)
+    changes = get_recent_changes(DB_PATH, limit=500)
     os.makedirs(out_dir, exist_ok=True)
 
     with APP.app_context():
         html = APP.jinja_env.get_template('index.html').render(
-            rankings=rankings, changes=changes, static_site=True
+            **page_context(rankings, changes), static_site=True
         )
 
     with open(os.path.join(out_dir, 'index.html'), 'w', encoding='utf-8') as f:
