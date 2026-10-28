@@ -3,8 +3,9 @@ name: Publish rankings to GitHub Pages
 on:
   push:
     branches: [main]
+  # Hourly fallback; cron-job.org triggers workflow_dispatch every 5 minutes
   schedule:
-    - cron: '*/5 * * * *'  # every 5 minutes (GitHub's minimum)
+    - cron: '17 * * * *'
   workflow_dispatch:
 
 permissions:
