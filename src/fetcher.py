@@ -11,7 +11,7 @@ import urllib.error
 import ssl
 import certifi
 
-MAMA_API_URL = "https://api.mnetplus.world/vote/v1/public/guest/votes/690020de20a9a4058b351522/options?sort=RANKED"
+MAMA_API_URL = "https://api.mnetplus.world/vote/v1/public/guest/votes/6acecda6f3778e1b06f5170b/options?sort=RANKED"
 
 
 def fetch_current_rankings() -> Optional[Dict]:

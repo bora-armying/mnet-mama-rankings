@@ -140,8 +140,10 @@
         <div class="meta">
           <strong>Last Updated:</strong> {{ rankings.updatedAt }}<br>
           <strong>Fetched At:</strong> {{ rankings.fetchedAt }}<br>
+          {% if not static_site %}
           <button onclick="refreshRankings()" class="refresh-btn" id="refreshBtn">🔄 Refresh Rankings</button>
           <span id="statusMessage" class="status-message" style="display: none;"></span>
+          {% endif %}
         </div>
 
         {% if rankings.groups %}
