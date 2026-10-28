@@ -364,16 +364,16 @@
       const initial = location.hash.slice(1);
       if ([...tabs].some(t => t.dataset.tab === initial)) selectTab(initial);
 
-      // Show timestamps in the viewer's local time
+      // Show timestamps in Korea Standard Time
       document.querySelectorAll('.local-time').forEach(el => {
         // SQLite stores UTC as "YYYY-MM-DD HH:MM:SS"; normalise for all browsers
         let value = (el.getAttribute('datetime') || '').replace(' ', 'T');
         if (value && !/[zZ]|[+-]\d\d:?\d\d$/.test(value)) value += 'Z';
         const date = new Date(value);
         if (!isNaN(date)) {
-          el.textContent = date.toLocaleString(undefined, {
-            month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit'
-          });
+          el.textContent = date.toLocaleString('en-US', {
+            timeZone: 'Asia/Seoul', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit'
+          }) + ' KST';
         }
       });
 
