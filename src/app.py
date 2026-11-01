@@ -3,6 +3,7 @@ from flask import Flask, render_template, jsonify, request
 import os
 from .fetcher import fetch_current_rankings, extract_rankings_summary
 from .storage import init_db, save_rankings, get_latest_rankings, get_recent_changes
+from .history import load_history, site_history
 
 APP = Flask(__name__, template_folder=os.path.join(os.path.dirname(__file__), '..', 'templates'))
 DB_PATH = os.path.join(os.path.dirname(__file__), '..', 'data', 'rankings.db')
@@ -19,6 +20,7 @@ def page_context(rankings, changes):
     in which any rank changed.
     """
     by_name = {g['groupName']: g for g in (rankings or {}).get('groups', [])}
+    history = load_history()
     groups = []
     for name in DISPLAY_CATEGORIES:
         group = by_name.get(name)
@@ -37,6 +39,7 @@ def page_context(rankings, changes):
             'name': name,
             'options': options,
             'moved_at': latest[0]['detected_at'] if latest else None,
+            'history': site_history(history, name),
         })
     return {'rankings': rankings, 'groups': groups}
 

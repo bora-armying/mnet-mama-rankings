@@ -40,6 +40,14 @@ python3 -m src.app
 
 Open http://127.0.0.1:5000/ in your browser to view rankings.
 
+## Hourly history
+
+The GitHub Pages workflow saves each KST hour to `data/hourly_rankings.json`:
+the ranks from the hour's first fetch, plus each artist's best and lowest rank
+across every fetch in that hour. A new hour commits the file. The page reads it
+for its hour picker and rank chart. To update it from the local database, run
+`python3 -m src.history`.
+
 ## Usage
 
 ### Continuous Monitoring

@@ -20,6 +20,14 @@
         --up: #1f9d55;
         --down: #d64545;
         --shadow: 0 1px 2px rgba(28, 24, 48, 0.06), 0 8px 24px rgba(28, 24, 48, 0.06);
+        --series-1: #2a78d6;
+        --series-2: #eb6834;
+        --series-3: #1baf7a;
+        --series-4: #eda100;
+        --series-5: #e87ba4;
+        --series-6: #008300;
+        --series-7: #6250d6;
+        --series-8: #e34948;
       }
       @media (prefers-color-scheme: dark) {
         :root {
@@ -37,6 +45,14 @@
           --up: #3ccf7c;
           --down: #ff6b6b;
           --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 24px rgba(0, 0, 0, 0.25);
+          --series-1: #3987e5;
+          --series-2: #d95926;
+          --series-3: #199e70;
+          --series-4: #c98500;
+          --series-5: #d55181;
+          --series-6: #008300;
+          --series-7: #9085e9;
+          --series-8: #e66767;
         }
       }
 
@@ -205,6 +221,7 @@
         flex-shrink: 0;
       }
       .row-name { font-weight: 600; overflow-wrap: anywhere; }
+      .hour-range { display: block; font-size: 0.75rem; font-weight: 400; color: var(--muted); }
 
       /* Movement since the last ranking change */
       .delta {
@@ -229,6 +246,121 @@
         background: var(--surface);
         border-radius: 16px;
       }
+      /* Hour picker */
+      .time-picker {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.5rem;
+        margin-bottom: 1.75rem;
+        font-size: 0.875rem;
+        color: var(--muted);
+      }
+      .time-picker select {
+        font: inherit;
+        padding: 0.4rem 0.6rem;
+        border-radius: 8px;
+        border: 1px solid var(--border);
+        background: var(--surface);
+        color: var(--text);
+      }
+      .picker-status { flex-basis: 100%; }
+      .picker-status:empty { display: none; }
+
+      /* Trend chart */
+      .trend {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        box-shadow: var(--shadow);
+        padding: 1rem;
+        margin-bottom: 1.5rem;
+      }
+      .trend-head {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        align-items: center;
+        gap: 0.5rem;
+      }
+      .trend h2 { font-size: 1rem; font-weight: 700; }
+      .range { display: flex; gap: 0.25rem; }
+      .range button {
+        font: inherit;
+        font-size: 0.8rem;
+        font-weight: 600;
+        padding: 0.25rem 0.6rem;
+        border-radius: 8px;
+        border: 0;
+        background: transparent;
+        color: var(--muted);
+        cursor: pointer;
+      }
+      .range button[aria-pressed="true"] { background: var(--accent-soft); color: var(--text); }
+      .legend {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.25rem 0.875rem;
+        margin: 0.75rem 0;
+        font-size: 0.8rem;
+        color: var(--muted);
+      }
+      .legend span { display: inline-flex; align-items: center; gap: 0.35rem; }
+      .line-key { width: 14px; height: 2px; border-radius: 1px; flex-shrink: 0; }
+      .chart { position: relative; touch-action: pan-y; }
+      .chart svg { display: block; width: 100%; outline-offset: 2px; }
+      .chart text { font-size: 12px; fill: var(--muted); font-variant-numeric: tabular-nums; }
+      .chart text.end-label { fill: var(--text); font-weight: 600; }
+      .chart .grid { stroke: var(--border); stroke-width: 1; }
+      .chart .crosshair { stroke: var(--muted); stroke-width: 1; }
+      .chart .series { fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+      .chart .dot { stroke: var(--surface); stroke-width: 2; }
+      .chart .band { opacity: 0.14; }
+      .chart-note { margin-top: 0.5rem; font-size: 0.8rem; color: var(--muted); }
+      .chart-message {
+        padding: 3rem 1rem;
+        text-align: center;
+        color: var(--muted);
+        font-size: 0.875rem;
+      }
+      .tooltip {
+        position: absolute;
+        top: 4px;
+        z-index: 1;
+        min-width: 150px;
+        max-width: 230px;
+        padding: 0.5rem 0.65rem;
+        border-radius: 10px;
+        border: 1px solid var(--border);
+        background: var(--surface);
+        box-shadow: var(--shadow);
+        font-size: 0.8rem;
+        pointer-events: none;
+      }
+      .tooltip-time { color: var(--muted); margin-bottom: 0.25rem; }
+      .tooltip-row { display: flex; align-items: center; gap: 0.4rem; color: var(--muted); }
+      .tooltip-row strong { color: var(--text); font-variant-numeric: tabular-nums; }
+      .trend details { margin-top: 0.75rem; font-size: 0.8rem; color: var(--muted); }
+      .trend summary { cursor: pointer; font-weight: 600; }
+      .artist-options {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+        gap: 0.25rem 0.75rem;
+        margin-top: 0.5rem;
+      }
+      .artist-options label { display: flex; align-items: center; gap: 0.4rem; color: var(--text); cursor: pointer; }
+      .artist-options input:disabled + span { opacity: 0.45; }
+      .table-wrap { max-height: 320px; overflow: auto; margin-top: 0.5rem; }
+      .table-wrap table { border-collapse: collapse; width: 100%; color: var(--text); font-variant-numeric: tabular-nums; }
+      .table-wrap th, .table-wrap td {
+        padding: 0.3rem 0.5rem;
+        text-align: right;
+        white-space: nowrap;
+        border-bottom: 1px solid var(--border);
+      }
+      .table-wrap th { position: sticky; top: 0; background: var(--surface); font-weight: 600; }
+      .table-wrap th:first-child, .table-wrap td:first-child { text-align: left; color: var(--muted); }
+
       footer {
         margin-top: 3rem;
         text-align: center;
@@ -296,6 +428,15 @@
           {% endfor %}
         </nav>
 
+        {% if groups[0].history.snapshots %}
+          <div class="time-picker">
+            <label for="pickDate">View rankings at</label>
+            <select id="pickDate"><option value="">Latest</option></select>
+            <select id="pickHour" aria-label="Hour (KST)" hidden></select>
+            <span class="picker-status" id="pickerStatus" role="status"></span>
+          </div>
+        {% endif %}
+
         {% for group in groups %}
           <section class="panel" id="panel-{{ group.id }}" role="tabpanel"
                    aria-labelledby="tab-{{ group.id }}" {% if not loop.first %}hidden{% endif %}>
@@ -313,6 +454,31 @@
                 </div>
               {% endfor %}
             </div>
+
+            {% if group.history.snapshots %}
+              <script type="application/json" class="history-data">{{ group.history|tojson }}</script>
+              <div class="trend">
+                <div class="trend-head">
+                  <h2>Rank over time</h2>
+                  <div class="range" role="group" aria-label="Time range">
+                    <button type="button" data-hours="24" aria-pressed="false">24H</button>
+                    <button type="button" data-hours="168" aria-pressed="true">7D</button>
+                    <button type="button" data-hours="0" aria-pressed="false">All</button>
+                  </div>
+                </div>
+                <div class="legend"></div>
+                <div class="chart"></div>
+                <p class="chart-note">Shading shows how far an artist moved during each hour.</p>
+                <details>
+                  <summary>Choose artists (up to 8)</summary>
+                  <div class="artist-options"></div>
+                </details>
+                <details>
+                  <summary>Show as table</summary>
+                  <div class="table-wrap"></div>
+                </details>
+              </div>
+            {% endif %}
 
             <ol class="list">
               {% for option in group.options[3:] %}
@@ -360,22 +526,397 @@
       tabs.forEach(tab => tab.addEventListener('click', () => {
         selectTab(tab.dataset.tab);
         history.replaceState(null, '', '#' + tab.dataset.tab);
+        historyPanels.forEach(entry => entry.redraw());
       }));
       const initial = location.hash.slice(1);
       if ([...tabs].some(t => t.dataset.tab === initial)) selectTab(initial);
 
       // Show timestamps in Korea Standard Time
-      document.querySelectorAll('.local-time').forEach(el => {
+      function formatKst(raw) {
         // SQLite stores UTC as "YYYY-MM-DD HH:MM:SS"; normalise for all browsers
-        let value = (el.getAttribute('datetime') || '').replace(' ', 'T');
+        let value = (raw || '').replace(' ', 'T');
         if (value && !/[zZ]|[+-]\d\d:?\d\d$/.test(value)) value += 'Z';
         const date = new Date(value);
-        if (!isNaN(date)) {
-          el.textContent = date.toLocaleString('en-US', {
-            timeZone: 'Asia/Seoul', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit'
-          }) + ' KST';
-        }
+        if (isNaN(date)) return null;
+        return date.toLocaleString('en-US', {
+          timeZone: 'Asia/Seoul', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit'
+        }) + ' KST';
+      }
+      document.querySelectorAll('.local-time').forEach(el => {
+        const text = formatKst(el.getAttribute('datetime'));
+        if (text) el.textContent = text;
       });
+
+      // Hourly history. Hours are KST keys like "2026-10-28T20"; they are read
+      // as UTC milliseconds so that formatting needs no time zone conversion.
+      const hourMs = hour => Date.UTC(+hour.slice(0, 4), +hour.slice(5, 7) - 1, +hour.slice(8, 10), +hour.slice(11, 13));
+      const formatDay = ms => new Date(ms).toLocaleDateString('en-US', { timeZone: 'UTC', month: 'short', day: 'numeric' });
+      const formatHour = ms => new Date(ms).toLocaleTimeString('en-US', { timeZone: 'UTC', hour: 'numeric' });
+      function make(tag, className, text) {
+        const node = document.createElement(tag);
+        if (className) node.className = className;
+        if (text !== undefined) node.textContent = text;
+        return node;
+      }
+
+      const historyPanels = [...document.querySelectorAll('.panel')]
+        .filter(panel => panel.querySelector('.history-data'))
+        .map(panel => {
+          const podium = panel.querySelector('.podium');
+          const list = panel.querySelector('.list');
+          const note = panel.querySelector('.moved-at');
+          return {
+            panel, podium, list, note,
+            history: JSON.parse(panel.querySelector('.history-data').textContent),
+            latest: { podium: podium.innerHTML, list: list.innerHTML },
+          };
+        });
+
+      // A: view the rankings saved at a chosen hour
+      function deltaBadge(movement) {
+        if (movement > 0) return make('span', 'delta up', '▲ ' + movement);
+        if (movement < 0) return make('span', 'delta down', '▼ ' + -movement);
+        return make('span', 'delta', '–');
+      }
+      const rangeText = range => '#' + range[0] + '–#' + range[1];
+      function hourRange(range) {
+        return range ? make('span', 'hour-range', 'Hour range ' + rangeText(range)) : '';
+      }
+      function artistImage(artist, className) {
+        if (!artist.thumbnailUrl) return make('span', className || 'ph');
+        const img = make('img', className);
+        img.src = artist.thumbnailUrl;
+        img.alt = className ? '' : artist.title;
+        return img;
+      }
+      function showSaved(entry, hour) {
+        const snapshots = entry.history.snapshots;
+        const index = snapshots.findIndex(s => s.hour === hour);
+        entry.podium.replaceChildren();
+        entry.list.replaceChildren();
+        if (index < 0) return;
+        const previous = snapshots[index - 1];
+        const ranked = entry.history.artists
+          .map((artist, i) => {
+            const rank = snapshots[index].ranks[i];
+            const before = previous ? previous.ranks[i] : null;
+            return {
+              ...artist, rank,
+              range: snapshots[index].ranges[i],
+              movement: rank !== null && before !== null ? before - rank : 0,
+            };
+          })
+          .filter(artist => artist.rank !== null)
+          .sort((a, b) => a.rank - b.rank);
+        ranked.slice(0, 3).forEach((artist, i) => {
+          const card = make('div', 'podium-card place-' + (i + 1));
+          card.append(make('div', 'medal', artist.rank), artistImage(artist),
+                      make('div', 'podium-name', artist.title), hourRange(artist.range), deltaBadge(artist.movement));
+          entry.podium.append(card);
+        });
+        ranked.slice(3).forEach(artist => {
+          const row = make('li', 'row');
+          const name = make('span', 'row-name', artist.title);
+          name.append(hourRange(artist.range));
+          row.append(make('span', 'row-rank', artist.rank), artistImage(artist, 'thumb'),
+                     name, deltaBadge(artist.movement));
+          entry.list.append(row);
+        });
+      }
+      function setupPicker() {
+        const pickDate = document.getElementById('pickDate');
+        const pickHour = document.getElementById('pickHour');
+        const status = document.getElementById('pickerStatus');
+        if (!pickDate || !historyPanels.length) return;
+
+        const hours = [...new Set(historyPanels.flatMap(e => e.history.snapshots.map(s => s.hour)))].sort();
+        const days = [...new Set(hours.map(h => h.slice(0, 10)))].reverse();
+        days.forEach(day => {
+          const option = make('option', '', formatDay(hourMs(day + 'T00')));
+          option.value = day;
+          pickDate.append(option);
+        });
+
+        function apply() {
+          const hour = pickDate.value ? pickDate.value + 'T' + pickHour.value : null;
+          historyPanels.forEach(entry => {
+            if (hour) {
+              showSaved(entry, hour);
+            } else {
+              entry.podium.innerHTML = entry.latest.podium;
+              entry.list.innerHTML = entry.latest.list;
+            }
+            if (entry.note) entry.note.hidden = !!hour;
+          });
+          const saved = hour && historyPanels.flatMap(e => e.history.snapshots).find(s => s.hour === hour);
+          if (saved) {
+            const start = hourMs(hour);
+            status.textContent = 'Showing rankings at ' + formatKst(saved.fetchedAt)
+              + '. Arrows show the change from the previous saved hour. Hour range shows the best and lowest rank from '
+              + formatHour(start) + ' to ' + formatHour(start + 3600e3) + '.';
+          } else {
+            status.textContent = '';
+          }
+        }
+        pickDate.addEventListener('change', () => {
+          const kept = pickHour.value;
+          const dayHours = hours.filter(h => h.startsWith(pickDate.value + 'T')).map(h => h.slice(11));
+          pickHour.replaceChildren();
+          dayHours.reverse().forEach(h => {
+            const option = make('option', '', formatHour(hourMs(pickDate.value + 'T' + h)) + ' KST');
+            option.value = h;
+            pickHour.append(option);
+          });
+          pickHour.hidden = !pickDate.value;
+          if (dayHours.includes(kept)) pickHour.value = kept;
+          apply();
+        });
+        pickHour.addEventListener('change', apply);
+      }
+
+      // B: rank over time, one line per selected artist
+      const SVG_NS = 'http://www.w3.org/2000/svg';
+      const MAX_SERIES = 8;
+      function svgNode(tag, attrs, parent) {
+        const node = document.createElementNS(SVG_NS, tag);
+        Object.entries(attrs || {}).forEach(([key, value]) => node.setAttribute(key, value));
+        if (parent) parent.append(node);
+        return node;
+      }
+      function setupTrend(entry) {
+        const root = entry.panel.querySelector('.trend');
+        const chart = root.querySelector('.chart');
+        const legend = root.querySelector('.legend');
+        const options = root.querySelector('.artist-options');
+        const tableWrap = root.querySelector('.table-wrap');
+        const artists = entry.history.artists;
+        const snapshots = entry.history.snapshots.map(s => ({ ...s, ms: hourMs(s.hour) }));
+        const label = ms => formatDay(ms) + ', ' + formatHour(ms);
+        let rangeHours = 168;
+        let drawnWidth = 0;
+
+        // A line keeps its color while selected, whatever else is added or removed
+        const slots = new Map();
+        const freeSlot = () => [...Array(MAX_SERIES).keys()].map(i => i + 1).find(s => ![...slots.values()].includes(s));
+        artists.slice(0, 4).forEach((artist, i) => slots.set(i, freeSlot()));
+
+        function visibleSnapshots() {
+          if (!rangeHours) return snapshots;
+          const start = snapshots[snapshots.length - 1].ms - rangeHours * 3600e3;
+          return snapshots.filter(s => s.ms >= start);
+        }
+
+        function drawLegend() {
+          legend.replaceChildren();
+          slots.forEach((slot, i) => {
+            const item = make('span');
+            const key = make('i', 'line-key');
+            key.style.background = 'var(--series-' + slot + ')';
+            item.append(key, artists[i].title);
+            legend.append(item);
+          });
+        }
+
+        function drawOptions() {
+          options.replaceChildren();
+          artists.forEach((artist, i) => {
+            const row = make('label');
+            const box = make('input');
+            box.type = 'checkbox';
+            box.checked = slots.has(i);
+            box.disabled = !box.checked && slots.size >= MAX_SERIES;
+            box.addEventListener('change', () => {
+              if (box.checked) slots.set(i, freeSlot());
+              else slots.delete(i);
+              drawOptions();
+              draw();
+            });
+            row.append(box, make('span', '', artist.title));
+            options.append(row);
+          });
+        }
+
+        function drawTable(visible) {
+          const table = make('table');
+          const head = table.createTHead().insertRow();
+          head.append(make('th', '', 'Hour (KST)'));
+          slots.forEach((slot, i) => head.append(make('th', '', artists[i].title)));
+          const body = table.createTBody();
+          [...visible].reverse().forEach(s => {
+            const row = body.insertRow();
+            row.append(make('td', '', label(s.ms)));
+            slots.forEach((slot, i) => {
+              const text = s.ranks[i] === null ? '–' : '#' + s.ranks[i] + (s.ranges[i] ? ' (' + rangeText(s.ranges[i]) + ')' : '');
+              row.append(make('td', '', text));
+            });
+          });
+          tableWrap.replaceChildren(table);
+        }
+
+        function draw() {
+          drawLegend();
+          const visible = visibleSnapshots();
+          drawTable(visible);
+          const width = chart.clientWidth;
+          if (!width) return;
+          drawnWidth = width;
+          chart.replaceChildren();
+
+          const selected = [...slots.keys()];
+          const ranks = selected.flatMap(i => visible.flatMap(s => [s.ranks[i], ...(s.ranges[i] || [])])).filter(r => r !== null);
+          if (visible.length < 2 || !ranks.length) {
+            chart.append(make('div', 'chart-message', selected.length
+              ? 'The chart appears once at least two hours are saved in this range.'
+              : 'Choose at least one artist.'));
+            return;
+          }
+
+          const height = width < 520 ? 240 : 300;
+          const top = 10, bottom = 26, left = 32;
+          const minRank = Math.min(...ranks), maxRank = Math.max(...ranks);
+          const y = rank => top + (rank - minRank + 0.5) / (maxRank - minRank + 1) * (height - top - bottom);
+
+          // Up to 4 lines are labeled at the end if the labels fit and don't collide
+          const ends = selected.map(i => {
+            const last = [...visible].reverse().find(s => s.ranks[i] !== null);
+            return last && { i, y: y(last.ranks[i]), ms: last.ms };
+          }).filter(Boolean);
+          const longest = Math.max(...selected.map(i => artists[i].title.length));
+          const endYs = ends.map(e => e.y).sort((a, b) => a - b);
+          const labelWidth = longest * 9 + 14;
+          const useLabels = selected.length <= 4 && labelWidth <= width * 0.3
+            && endYs.every((value, n) => !n || value - endYs[n - 1] >= 15);
+          const right = useLabels ? labelWidth : 10;
+
+          const t0 = visible[0].ms, t1 = visible[visible.length - 1].ms;
+          const x = ms => left + (ms - t0) / (t1 - t0) * (width - left - right);
+
+          const svg = svgNode('svg', {
+            viewBox: `0 0 ${width} ${height}`, height, tabindex: 0, role: 'img',
+            'aria-label': 'Rank over time for ' + selected.map(i => artists[i].title).join(', ') + '. Rank 1 is at the top.',
+          });
+
+          // Rank axis, with #1 at the top
+          const rankStep = [1, 2, 5, 10].find(step => (maxRank - minRank) / step <= 6) || 20;
+          for (let rank = minRank; rank <= maxRank; rank++) {
+            if ((rank - 1) % rankStep) continue;
+            svgNode('line', { class: 'grid', x1: left, x2: width - right, y1: y(rank), y2: y(rank) }, svg);
+            svgNode('text', { x: left - 8, y: y(rank) + 4, 'text-anchor': 'end' }, svg).textContent = '#' + rank;
+          }
+
+          // Time axis, aligned to KST hours
+          const spanHours = (t1 - t0) / 3600e3;
+          const maxTicks = Math.max(2, Math.floor((width - left - right) / 80));
+          const hourStep = [1, 2, 3, 6, 12, 24, 48, 72, 168, 336].find(step => spanHours / step <= maxTicks) || 672;
+          const stepMs = hourStep * 3600e3;
+          for (let ms = Math.ceil(t0 / stepMs) * stepMs; ms <= t1; ms += stepMs) {
+            const midnight = new Date(ms).getUTCHours() === 0;
+            const edge = x(ms) < left + 20 ? 'start' : x(ms) > width - right - 20 ? 'end' : 'middle';
+            svgNode('text', { x: x(ms), y: height - 6, 'text-anchor': edge }, svg)
+              .textContent = midnight ? formatDay(ms) : formatHour(ms);
+          }
+
+          // Each hour's range covers the time until the next saved hour
+          slots.forEach((slot, i) => {
+            visible.slice(0, -1).forEach((s, n) => {
+              const range = s.ranges[i];
+              if (!range) return;
+              svgNode('rect', {
+                class: 'band',
+                x: x(s.ms), width: x(visible[n + 1].ms) - x(s.ms),
+                y: y(range[0]), height: Math.max(y(range[1]) - y(range[0]), 1),
+                style: `fill: var(--series-${slot})`,
+              }, svg);
+            });
+          });
+
+          slots.forEach((slot, i) => {
+            let path = '', drawing = false;
+            visible.forEach(s => {
+              if (s.ranks[i] === null) { drawing = false; return; }
+              path += `${drawing ? 'L' : 'M'}${x(s.ms).toFixed(1)} ${y(s.ranks[i]).toFixed(1)}`;
+              drawing = true;
+            });
+            svgNode('path', { class: 'series', d: path, style: `stroke: var(--series-${slot})` }, svg);
+          });
+          ends.forEach(end => {
+            svgNode('circle', { class: 'dot', cx: x(end.ms), cy: end.y, r: 5, style: `fill: var(--series-${slots.get(end.i)})` }, svg);
+            if (useLabels) {
+              svgNode('text', { class: 'end-label', x: x(end.ms) + 10, y: end.y + 4 }, svg).textContent = artists[end.i].title;
+            }
+          });
+
+          // Crosshair and tooltip, by pointer or arrow keys
+          const hover = svgNode('g', { visibility: 'hidden' }, svg);
+          const tooltip = make('div', 'tooltip');
+          tooltip.hidden = true;
+          chart.append(svg, tooltip);
+          let current = visible.length - 1;
+
+          function showAt(index) {
+            current = index;
+            const s = visible[index];
+            hover.replaceChildren();
+            hover.setAttribute('visibility', 'visible');
+            svgNode('line', { class: 'crosshair', x1: x(s.ms), x2: x(s.ms), y1: top, y2: height - bottom }, hover);
+            const rows = selected.filter(i => s.ranks[i] !== null).sort((a, b) => s.ranks[a] - s.ranks[b]);
+            rows.forEach(i => {
+              svgNode('circle', { class: 'dot', cx: x(s.ms), cy: y(s.ranks[i]), r: 5, style: `fill: var(--series-${slots.get(i)})` }, hover);
+            });
+            tooltip.replaceChildren(make('div', 'tooltip-time', label(s.ms) + ' KST'));
+            rows.forEach(i => {
+              const row = make('div', 'tooltip-row');
+              const key = make('i', 'line-key');
+              key.style.background = `var(--series-${slots.get(i)})`;
+              row.append(key, make('strong', '', '#' + s.ranks[i]),
+                         make('span', '', artists[i].title + (s.ranges[i] ? ' (' + rangeText(s.ranges[i]) + ')' : '')));
+              tooltip.append(row);
+            });
+            tooltip.hidden = false;
+            const px = x(s.ms);
+            const flip = px + 14 + tooltip.offsetWidth > width;
+            tooltip.style.left = Math.max(0, flip ? px - 14 - tooltip.offsetWidth : px + 14) + 'px';
+          }
+          function hideHover() {
+            hover.setAttribute('visibility', 'hidden');
+            tooltip.hidden = true;
+          }
+          svg.addEventListener('pointermove', event => {
+            const bounds = svg.getBoundingClientRect();
+            const pointer = event.clientX - bounds.left;
+            let nearest = 0;
+            visible.forEach((s, n) => {
+              if (Math.abs(x(s.ms) - pointer) < Math.abs(x(visible[nearest].ms) - pointer)) nearest = n;
+            });
+            showAt(nearest);
+          });
+          svg.addEventListener('pointerleave', hideHover);
+          svg.addEventListener('focus', () => showAt(current));
+          svg.addEventListener('blur', hideHover);
+          svg.addEventListener('keydown', event => {
+            if (event.key === 'ArrowLeft' && current > 0) showAt(current - 1);
+            if (event.key === 'ArrowRight' && current < visible.length - 1) showAt(current + 1);
+          });
+        }
+
+        root.querySelectorAll('.range button').forEach(button => {
+          button.addEventListener('click', () => {
+            rangeHours = +button.dataset.hours;
+            root.querySelectorAll('.range button').forEach(b => b.setAttribute('aria-pressed', b === button));
+            draw();
+          });
+        });
+        drawOptions();
+        draw();
+        // A hidden tab's chart has no width until the tab is shown
+        entry.redraw = () => {
+          if (chart.clientWidth && chart.clientWidth !== drawnWidth) draw();
+        };
+        new ResizeObserver(() => setTimeout(entry.redraw)).observe(chart);
+      }
+
+      setupPicker();
+      historyPanels.forEach(setupTrend);
 
       function refreshRankings() {
         const btn = document.getElementById('refreshBtn');

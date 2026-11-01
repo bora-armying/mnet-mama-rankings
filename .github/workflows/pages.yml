@@ -8,11 +8,6 @@ on:
     - cron: '17 * * * *'
   workflow_dispatch:
 
-permissions:
-  contents: read
-  pages: write
-  id-token: write
-
 concurrency:
   group: pages
   cancel-in-progress: false
@@ -20,8 +15,12 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write  # commit the hourly history file
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: main  # include history committed by earlier runs
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
@@ -39,6 +38,18 @@ jobs:
           restore-keys: rankings-db-
       - name: Fetch rankings
         run: python -m src.scheduler --once
+      - name: Record hourly rankings
+        run: |
+          # Commit once per hour; the current hour's range stays in the cached database
+          added=$(python -m src.history)
+          if [ "$added" != "0" ]; then
+            git add data/hourly_rankings.json
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git commit -m "Record hourly rankings"
+            git pull --rebase origin main
+            git push origin main
+          fi
       - name: Build static site
         run: python -m src.build_static --out _site
       - uses: actions/upload-pages-artifact@v3
@@ -48,6 +59,9 @@ jobs:
   deploy:
     needs: build
     runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
